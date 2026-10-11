@@ -1,85 +1,49 @@
 <div align="center">
 
-# Datagram
+<h1>Datagram</h1>
 
-**A privacy-first messenger built on a purpose-built encrypted protocol.**
+<p>A privacy-first messenger built on a purpose-built encrypted transport protocol.</p>
 
-*Secure by design. Not by configuration.*
+[![Protocol](https://img.shields.io/badge/protocol-DGProto%20v1-6f42c1)](https://github.com/datagram-messenger/dgproto-go)
+[![Go](https://img.shields.io/badge/Go-1.25+-00ADD8?logo=go&logoColor=white)](https://github.com/datagram-messenger/server)
+[![Rust](https://img.shields.io/badge/Rust-1.80+-orange?logo=rust&logoColor=white)](https://github.com/datagram-messenger/dgproto-rs)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/datagram-messenger/dgproto-go/blob/main/LICENSE)
 
 </div>
 
 ---
 
-## What is Datagram?
+Datagram is a production-grade messenger built from the transport layer up. At its core is **DGProto v1** — a custom binary wire protocol with mutual authentication, end-to-end encryption, replay protection, and forward secrecy. Not bolted on. Built in.
 
-Datagram is a production-grade messenger built from the transport layer up. Instead of layering encryption on top of an existing protocol, we designed **DGProto v1** — a custom binary wire protocol with mutual authentication, end-to-end encryption, replay protection, and forward secrecy baked in at the core.
-
-The stack is intentionally minimal and auditable: a Go backend, a Rust client library, and a desktop app built with Tauri v2.
+The stack: Go backend · Rust client library · Tauri v2 desktop app.
 
 ---
 
-## DGProto v1
+### Core repositories
 
-DGProto v1 is the secure transport protocol that powers Datagram. It is binary, session-oriented, and cryptographically secured end-to-end.
-
-```
-┌──────────────────────────────────────────────────────────────┐
-│  L4  Application   Typed messages: chat, ping, ack, close    │
-│  L3  Session       Sequences, epochs, replay, keepalive      │
-│  L2  Cryptography  Noise XX · ChaCha20-Poly1305 · HKDF       │
-│  L1  Framing       40-byte header · TLV encoding · padding   │
-│  L0  Transport     TCP                                       │
-└──────────────────────────────────────────────────────────────┘
-```
-
-**Security properties:**
-
-- 🔐 **Mutual authentication** — `Noise_XX_25519_ChaChaPoly_SHA256` three-flight handshake
-- 🔒 **End-to-end encryption** — ChaCha20-Poly1305 AEAD on every frame
-- 🔁 **Forward secrecy** — directional rekeying via HMAC-SHA256 key ratchet
-- 🛡️ **Replay protection** — 2048-entry sliding window, check-before-authenticate
-- 📦 **Traffic shaping** — optional random padding, authenticated as AAD
-
----
-
-## Repositories
-
-| Repository | Language | Description |
+| | Repository | Description |
 |---|---|---|
-| [`server`](https://github.com/datagram-messenger/server) | Go 1.25+ | Backend microservices — authenticated sessions, message routing, lifecycle |
-| [`dgproto-go`](https://github.com/datagram-messenger/dgproto-go) | Go 1.25+ | DGProto v1 reference implementation and wire specification |
-| [`dgproto-rs`](https://github.com/datagram-messenger/dgproto-rs) | Rust 1.80+ | DGProto v1 client library for the Tauri desktop app |
-
-> `dgproto-go` is the canonical specification authority. All wire-visible behavior in `dgproto-rs` is validated byte-for-byte against shared wire vectors.
+| 🖥️ | [**datagram-messenger/server**](https://github.com/datagram-messenger/server) | Go backend — authenticated sessions, message routing, lifecycle management |
+| 🔬 | [**datagram-messenger/dgproto-go**](https://github.com/datagram-messenger/dgproto-go) | DGProto v1 reference implementation in Go · wire spec authority |
+| 🦀 | [**datagram-messenger/dgproto-rs**](https://github.com/datagram-messenger/dgproto-rs) | DGProto v1 Rust client library for the desktop app |
 
 ---
 
-## Status
+### Security model
 
-The project is under active development.
+DGProto v1 is built on well-understood, auditable primitives:
 
-| Component | Status |
-|---|---|
-| DGProto v1 wire protocol | ✅ Implemented |
-| Go server transport & lifecycle | ✅ Implemented |
-| Rust client library | ✅ Implemented |
-| Desktop client (Tauri v2) | 🔨 In progress |
-| Messenger services (chat, users) | 🔨 In progress |
+- **Noise\_XX\_25519\_ChaChaPoly\_SHA256** — mutual authentication, three-flight handshake
+- **ChaCha20-Poly1305 AEAD** — every frame encrypted, header authenticated
+- **HMAC-SHA256 key ratchet** — directional forward secrecy via epoch-based rekeying
+- **Sliding replay window** — 2048-entry, check-before-authenticate
 
-> DGProto v1 is a draft specification. Wire compatibility will be formally declared after stabilization.
-
----
-
-## Security
-
-DGProto v1 is security-sensitive infrastructure. We treat correctness and wire compatibility as release requirements, not best-effort goals.
-
-If you discover a vulnerability, please report it privately — see [`SECURITY.md`](https://github.com/datagram-messenger/dgproto-go/blob/main/SECURITY.md) in `dgproto-go`. Do not open public issues for suspected security problems.
+> Found a vulnerability? Report it privately via [SECURITY.md](https://github.com/datagram-messenger/dgproto-go/blob/main/SECURITY.md). Please do not open public issues for security concerns.
 
 ---
 
 <div align="center">
 
-*Built with care. Designed to last.*
+*Correctness and security over delivery speed.*
 
 </div>
