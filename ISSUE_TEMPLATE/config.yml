@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Contribution guide and safe reporting
+    url: https://github.com/datagram-messenger/.github/blob/main/CONTRIBUTING.md
+    about: Find the right repository and read private reporting guidance before sharing sensitive information.
